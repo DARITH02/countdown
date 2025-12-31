@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎉 Happy New Year Countdown! 🎊</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800;900&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to bottom, #000428, #004e92);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Background Elements */
+        .firework {
+            position: fixed;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .snowflake {
+            position: fixed;
+            color: #fff;
+            font-size: 1.5em;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .star {
+            position: fixed;
+            background-color: white;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+            animation: twinkle 3s infinite alternate;
+        }
+        
+        @keyframes twinkle {
+            0% { opacity: 0.2; }
+            100% { opacity: 1; }
+        }
+        
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            justify-content: center;
+        }
+        
+        /* Header Styles */
+        .header {
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .year-display {
+            font-size: 8rem;
+            font-weight: 900;
+            background: linear-gradient(to right, #ff8a00, #e52e71, #9d50bb, #4776E6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+            margin-bottom: 10px;
+            animation: glow 2s infinite alternate;
+        }
+        
+        @keyframes glow {
+            0% { text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); }
+            100% { text-shadow: 0 0 30px rgba(255, 255, 255, 0.8), 0 0 40px rgba(255, 138, 0, 0.6); }
+        }
+        
+        .title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        
+        .subtitle {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            margin-bottom: 30px;
+            max-width: 800px;
+        }
+        
+        /* Countdown Display */
+        .countdown-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 40px 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 40px;
+            width: 100%;
+            max-width: 900px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .countdown-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shine 5s infinite linear;
+            z-index: -1;
+        }
+        
+        @keyframes shine {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .countdown-display {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .time-unit {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 20px;
+            padding: 30px 20px;
+            min-width: 160px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .time-unit:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.4);
+        }
+        
+        .time-unit::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.7s;
+        }
+        
+        .time-unit:hover::after {
+            left: 100%;
+        }
+        
+        .time-value {
+            font-size: 5rem;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 10px;
+            background: linear-gradient(to bottom, #fff, #ffd700);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .time-label {
+            font-size: 1.3rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #ffd700;
+            font-weight: 600;
+        }
+        
+        .separator {
+            display: flex;
+            align-items: center;
+            font-size: 3rem;
+            color: #ffd700;
+            font-weight: bold;
+            margin: 0 5px;
+        }
+        
+        /* New Year Message */
+        .message-container {
+            margin-top: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+            max-width: 800px;
+            animation: slideIn 1s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .message {
+            font-size: 1.8rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+        
+        .highlight {
+            color: #ffd700;
+            font-weight: 600;
+        }
+        
+        /* Celebration Button */
+        .celebration-btn {
+            background: linear-gradient(to right, #ff8a00, #e52e71);
+            color: white;
+            border: none;
+            padding: 18px 45px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: all 0.3s;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .celebration-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.7s;
+        }
+        
+        .celebration-btn:hover::before {
+            left: 100%;
+        }
+        
+        .celebration-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.4);
+        }
+        
+        .celebration-btn:active {
+            transform: scale(0.98);
+        }
+        
+        /* New Year Animation Overlay */
+        .new-year-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            flex-direction: column;
+        }
+        
+        .celebration-content {
+            text-align: center;
+            max-width: 900px;
+            padding: 50px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            border-radius: 30px;
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
+            animation: zoomIn 0.8s ease-out;
+        }
+        
+        @keyframes zoomIn {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        
+        .celebration-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 6rem;
+            background: linear-gradient(to right, #ff8a00, #e52e71, #9d50bb, #4776E6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 20px;
+            animation: bounce 1s infinite alternate;
+        }
+        
+        @keyframes bounce {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
+        
+        .celebration-text {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            color: #ffd700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        
+        .celebration-subtext {
+            font-size: 1.5rem;
+            line-height: 1.6;
+            margin-bottom: 40px;
+            max-width: 700px;
+        }
+        
+        .close-btn {
+            background: linear-gradient(to right, #4776E6, #9d50bb);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .close-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .year-display { font-size: 6rem; }
+            .title { font-size: 3.5rem; }
+            .time-unit { min-width: 130px; padding: 20px 15px; }
+            .time-value { font-size: 4rem; }
+        }
+        
+        @media (max-width: 768px) {
+            .year-display { font-size: 4.5rem; }
+            .title { font-size: 2.8rem; }
+            .countdown-display { gap: 15px; }
+            .time-unit { min-width: 100px; padding: 15px 10px; }
+            .time-value { font-size: 3rem; }
+            .time-label { font-size: 1rem; }
+            .separator { display: none; }
+            .message { font-size: 1.5rem; }
+            .celebration-title { font-size: 4rem; }
+            .celebration-text { font-size: 2rem; }
+        }
+        
+        @media (max-width: 480px) {
+            .year-display { font-size: 3.5rem; }
+            .title { font-size: 2.2rem; }
+            .time-unit { min-width: 80px; }
+            .time-value { font-size: 2.5rem; }
+            .time-label { font-size: 0.9rem; }
+            .message { font-size: 1.3rem; }
+            .container { padding: 20px; }
+            .celebration-title { font-size: 3rem; }
+            .celebration-text { font-size: 1.8rem; }
+        }
+        
+        /* Champagne Animation */
+        .champagne {
+            position: fixed;
+            width: 40px;
+            height: 100px;
+            bottom: -100px;
+            z-index: 5;
+        }
+        
+        .champagne .bottle {
+            position: absolute;
+            width: 30px;
+            height: 80px;
+            background: linear-gradient(to right, #ffd700, #ffed4e);
+            border-radius: 5px;
+            bottom: 0;
+            left: 5px;
+        }
+        
+        .champagne .cork {
+            position: absolute;
+            width: 15px;
+            height: 20px;
+            background: #8B4513;
+            border-radius: 3px;
+            top: -20px;
+            left: 12.5px;
+        }
+        
+        .bubble {
+            position: fixed;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 2;
+        }
+        
+        /* Clock icon animation */
+        .clock-icon {
+            font-size: 2.5rem;
+            color: #ffd700;
+            margin-bottom: 20px;
+            animation: rotate 10s linear infinite;
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Elements (Generated by JS) -->
+    
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="clock-icon">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="year-display" id="currentYear">2024</div>
+            <h1 class="title">🎊 Happy New Year Countdown! 🎆</h1>
+            <p class="subtitle">Countdown to the most magical moment of the year!</p>
+        </div>
+        
+        <!-- Countdown -->
+        <div class="countdown-container">
+            <div class="countdown-display">
+                <div class="time-unit">
+                    <span class="time-value" id="days">00</span>
+                    <span class="time-label">Days</span>
+                </div>
+                <div class="separator">:</div>
+                <div class="time-unit">
+                    <span class="time-value" id="hours">00</span>
+                    <span class="time-label">Hours</span>
+                </div>
+                <div class="separator">:</div>
+                <div class="time-unit">
+                    <span class="time-value" id="minutes">00</span>
+                    <span class="time-label">Minutes</span>
+                </div>
+                <div class="separator">:</div>
+                <div class="time-unit">
+                    <span class="time-value" id="seconds">00</span>
+                    <span class="time-label">Seconds</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Message -->
+        <div class="message-container">
+            <p class="message">
+                The clock is ticking towards <span class="highlight">2025</span>! 
+                Get ready to welcome new beginnings, fresh opportunities, and amazing adventures!
+            </p>
+            <p class="message">
+                May the New Year bring you <span class="highlight">joy, prosperity, and success</span> in all your endeavors!
+            </p>
+        </div>
+        
+        <!-- Celebration Button -->
+        <button class="celebration-btn" id="celebrationBtn">
+            <i class="fas fa-glass-cheers"></i> Trigger Early Celebration!
+        </button>
+        
+        <!-- Target Date Display -->
+        <div class="message" style="margin-top: 30px; font-size: 1.4rem; opacity: 0.9;">
+            <i class="fas fa-calendar-star"></i> 
+            Counting down to: <span id="targetDateDisplay">January 1, 2025 00:00:00</span>
+        </div>
+    </div>
+    
+    <!-- New Year Celebration Overlay -->
+    <div class="new-year-overlay" id="newYearOverlay">
+        <div class="celebration-content">
+            <h2 class="celebration-title">Happy New Year!</h2>
+            <div class="celebration-text" id="newYearText">Welcome 2025!</div>
+            <p class="celebration-subtext">
+                A new chapter begins today! Wishing you 365 days of happiness, 
+                52 weeks of success, 12 months of prosperity, and endless moments of joy!
+            </p>
+            <p class="celebration-subtext">
+                May this year be filled with love, laughter, and all the wonderful things you dream of!
+            </p>
+            <button class="close-btn" id="closeOverlayBtn">
+                <i class="fas fa-redo"></i> Continue Countdown
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const daysElement = document.getElementById('days');
+        const hoursElement = document.getElementById('hours');
+        const minutesElement = document.getElementById('minutes');
+        const secondsElement = document.getElementById('seconds');
+        const targetDateDisplay = document.getElementById('targetDateDisplay');
+        const currentYearElement = document.getElementById('currentYear');
+        const celebrationBtn = document.getElementById('celebrationBtn');
+        const newYearOverlay = document.getElementById('newYearOverlay');
+        const closeOverlayBtn = document.getElementById('closeOverlayBtn');
+        const newYearText = document.getElementById('newYearText');
+        
+        // Set target date to next New Year (January 1st of next year)
+        const now = new Date();
+        const currentYear = now.getFullYear();
+        const nextYear = currentYear + 1;
+        const targetDate = new Date(`January 1, ${nextYear} 00:00:00`).getTime();
+        
+        // Update current year display
+        currentYearElement.textContent = currentYear;
+        
+        // Update target date display
+        const targetDateObj = new Date(targetDate);
+        const options = { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        };
+        targetDateDisplay.textContent = targetDateObj.toLocaleDateString('en-US', options);
+        
+        // Create background elements
+        function createBackgroundElements() {
+            // Create stars
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = Math.random() * 4 + 1 + 'px';
+                star.style.height = star.style.width;
+                star.style.left = Math.random() * 100 + 'vw';
+                star.style.top = Math.random() * 100 + 'vh';
+                star.style.animationDelay = Math.random() * 5 + 's';
+                document.body.appendChild(star);
+            }
+            
+            // Create snowflakes
+            for (let i = 0; i < 50; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                snowflake.innerHTML = '❄';
+                snowflake.style.left = Math.random() * 100 + 'vw';
+                snowflake.style.top = Math.random() * 100 + 'vh';
+                snowflake.style.fontSize = Math.random() * 20 + 10 + 'px';
+                snowflake.style.opacity = Math.random() * 0.7 + 0.3;
+                document.body.appendChild(snowflake);
+                
+                // Animate snowflake
+                animateSnowflake(snowflake);
+            }
+        }
+        
+        // Animate snowflake falling
+        function animateSnowflake(snowflake) {
+            let x = parseFloat(snowflake.style.left);
+            let y = parseFloat(snowflake.style.top);
+            const speed = Math.random() * 0.5 + 0.2;
+            const sway = Math.random() * 2 - 1;
+            
+            function move() {
+                y += speed;
+                x += sway * Math.sin(y / 50);
+                
+                if (y > 100) {
+                    y = -10;
+                    x = Math.random() * 100;
+                }
+                
+                snowflake.style.left = x + 'vw';
+                snowflake.style.top = y + 'vh';
+                
+                requestAnimationFrame(move);
+            }
+            
+            move();
+        }
+        
+        // Create fireworks
+        function createFirework(x, y, color) {
+            const particles = 50;
+            const angleIncrement = (Math.PI * 2) / particles;
+            
+            for (let i = 0; i < particles; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'firework';
+                particle.style.backgroundColor = color || `hsl(${Math.random() * 360}, 100%, 60%)`;
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                document.body.appendChild(particle);
+                
+                const angle = i * angleIncrement;
+                const speed = 2 + Math.random() * 3;
+                const vx = Math.cos(angle) * speed;
+                const vy = Math.sin(angle) * speed;
+                
+                // Animate particle
+                animateParticle(particle, vx, vy);
+            }
+        }
+        
+        // Animate firework particle
+        function animateParticle(particle, vx, vy) {
+            let x = parseFloat(particle.style.left);
+            let y = parseFloat(particle.style.top);
+            let opacity = 1;
+            const gravity = 0.05;
+            const size = parseFloat(particle.style.width);
+            
+            function move() {
+                x += vx;
+                y += vy;
+                vy += gravity;
+                opacity -= 0.02;
+                
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                particle.style.opacity = opacity;
+                particle.style.width = (size * opacity) + 'px';
+                particle.style.height = (size * opacity) + 'px';
+                
+                if (opacity > 0) {
+                    requestAnimationFrame(move);
+                } else {
+                    particle.remove();
+                }
+            }
+            
+            move();
+        }
+        
+        // Create champagne bubbles
+        function createBubble() {
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            const size = Math.random() * 20 + 10;
+            bubble.style.width = size + 'px';
+            bubble.style.height = size + 'px';
+            bubble.style.left = Math.random() * 100 + 'vw';
+            bubble.style.bottom = '0px';
+            bubble.style.opacity = Math.random() * 0.5 + 0.5;
+            document.body.appendChild(bubble);
+            
+            // Animate bubble
+            animateBubble(bubble);
+        }
+        
+        // Animate bubble rising
+        function animateBubble(bubble) {
+            let y = 0;
+            let x = parseFloat(bubble.style.left);
+            const speed = Math.random() * 2 + 1;
+            const sway = Math.random() * 2 - 1;
+            
+            function rise() {
+                y += speed;
+                x += sway * Math.sin(y / 100);
+                
+                if (y < window.innerHeight + 100) {
+                    bubble.style.bottom = y + 'px';
+                    bubble.style.left = x + 'vw';
+                    requestAnimationFrame(rise);
+                } else {
+                    bubble.remove();
+                }
+            }
+            
+            rise();
+        }
+        
+        // Create champagne animation
+        function createChampagneAnimation() {
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const champagne = document.createElement('div');
+                    champagne.className = 'champagne';
+                    champagne.style.left = Math.random() * 80 + 10 + 'vw';
+                    document.body.appendChild(champagne);
+                    
+                    // Animate champagne popping
+                    let y = -100;
+                    function pop() {
+                        y += 5;
+                        champagne.style.bottom = y + 'px';
+                        
+                        if (y < 50) {
+                            requestAnimationFrame(pop);
+                        } else {
+                            // Create bubbles
+                            for (let j = 0; j < 30; j++) {
+                                setTimeout(() => createBubble(), j * 50);
+                            }
+                            
+                            // Remove champagne after popping
+                            setTimeout(() => {
+                                champagne.remove();
+                            }, 1000);
+                        }
+                    }
+                    
+                    pop();
+                }, i * 300);
+            }
+        }
+        
+        // Trigger random fireworks
+        function triggerRandomFireworks(count) {
+            for (let i = 0; i < count; i++) {
+                setTimeout(() => {
+                    const x = Math.random() * window.innerWidth;
+                    const y = Math.random() * window.innerHeight / 2;
+                    const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    createFirework(x, y, color);
+                }, i * 200);
+            }
+        }
+        
+        // Show New Year celebration
+        function showNewYearCelebration() {
+            newYearOverlay.style.display = 'flex';
+            newYearText.textContent = `Welcome ${nextYear}!`;
+            
+            // Trigger celebration effects
+            triggerRandomFireworks(20);
+            createChampagneAnimation();
+            
+            // Continuous fireworks
+            const fireworksInterval = setInterval(() => {
+                triggerRandomFireworks(3);
+            }, 1000);
+            
+            // Stop fireworks when overlay is closed
+            closeOverlayBtn.addEventListener('click', () => {
+                clearInterval(fireworksInterval);
+            }, { once: true });
+        }
+        
+        // Format number to always have 2 digits
+        function formatNumber(num) {
+            return num < 10 ? `0${num}` : num;
+        }
+        
+        // Update countdown display
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const timeLeft = targetDate - now;
+            
+            // If countdown is finished
+            if (timeLeft < 0) {
+                daysElement.textContent = '00';
+                hoursElement.textContent = '00';
+                minutesElement.textContent = '00';
+                secondsElement.textContent = '00';
+                
+                // Show New Year celebration
+                if (newYearOverlay.style.display !== 'flex') {
+                    showNewYearCelebration();
+                }
+                
+                return;
+            }
+            
+            // Calculate time units
+            const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+            
+            // Update display with animation
+            updateWithAnimation(daysElement, formatNumber(days));
+            updateWithAnimation(hoursElement, formatNumber(hours));
+            updateWithAnimation(minutesElement, formatNumber(minutes));
+            updateWithAnimation(secondsElement, formatNumber(seconds));
+            
+            // Continue countdown
+            requestAnimationFrame(updateCountdown);
+        }
+        
+        // Update with bounce animation
+        function updateWithAnimation(element, newValue) {
+            if (element.textContent !== newValue) {
+                element.style.transform = 'scale(1.3)';
+                element.style.color = '#ff0000';
+                
+                setTimeout(() => {
+                    element.textContent = newValue;
+                    element.style.transform = 'scale(1)';
+                    element.style.color = '';
+                }, 150);
+            }
+        }
+        
+        // Event Listeners
+        celebrationBtn.addEventListener('click', () => {
+            // Trigger celebration effects
+            triggerRandomFireworks(10);
+            createChampagneAnimation();
+            
+            // Add celebration message
+            const messages = [
+                "Early celebrations! 🎉",
+                "The party starts now! 🥳",
+                "Why wait? Let's celebrate! 🎊",
+                "Cheers to the New Year! 🥂"
+            ];
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            
+            // Create temporary celebration message
+            const celebrationMsg = document.createElement('div');
+            celebrationMsg.style.position = 'fixed';
+            celebrationMsg.style.top = '50%';
+            celebrationMsg.style.left = '50%';
+            celebrationMsg.style.transform = 'translate(-50%, -50%)';
+            celebrationMsg.style.backgroundColor = 'rgba(0,0,0,0.8)';
+            celebrationMsg.style.color = '#ffd700';
+            celebrationMsg.style.padding = '20px 40px';
+            celebrationMsg.style.borderRadius = '15px';
+            celebrationMsg.style.fontSize = '2rem';
+            celebrationMsg.style.fontWeight = 'bold';
+            celebrationMsg.style.zIndex = '1000';
+            celebrationMsg.style.boxShadow = '0 10px 30px rgba(0,0,0,0.5)';
+            celebrationMsg.textContent = randomMessage;
+            document.body.appendChild(celebrationMsg);
+            
+            // Remove message after 3 seconds
+            setTimeout(() => {
+                celebrationMsg.style.opacity = '0';
+                celebrationMsg.style.transition = 'opacity 1s';
+                setTimeout(() => celebrationMsg.remove(), 1000);
+            }, 3000);
+        });
+        
+        closeOverlayBtn.addEventListener('click', () => {
+            newYearOverlay.style.display = 'none';
+        });
+        
+        // Initialize
+        createBackgroundElements();
+        updateCountdown();
+        
+        // Trigger occasional random fireworks
+        setInterval(() => {
+            if (Math.random() > 0.7 && newYearOverlay.style.display !== 'flex') {
+                triggerRandomFireworks(1);
+            }
+        }, 3000);
+        
+        // Create occasional bubbles
+        setInterval(() => {
+            if (Math.random() > 0.8) {
+                createBubble();
+            }
+        }, 1000);
+        
+        // Add click event for manual fireworks
+        document.addEventListener('click', (e) => {
+            if (e.target === celebrationBtn || e.target.closest('.celebration-btn')) return;
+            
+            if (Math.random() > 0.7) {
+                createFirework(e.clientX, e.clientY);
+            }
+        });
+    </script>
+</body>
+</html>
